@@ -1,13 +1,13 @@
 <template>
-    <h2>我是首页</h2>
-  </template>
+    <TypeNav></TypeNav>
+</template>
   
   <script>
-  export default {
-    name:''
-  }
-  </script>
+
+export default {
+    name: "",
+};
+</script>
   
   <style>
-  
-  </style>
+</style>
