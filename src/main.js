@@ -14,6 +14,7 @@ import router from '@/router'
 
 Vue.config.productionTip = false
 
+import { reqCategoryList } from '@/api'
 
 
 new Vue({
@@ -21,4 +22,5 @@ new Vue({
   //注册路由
   router
 }).$mount('#app')
+reqCategoryList()
 
