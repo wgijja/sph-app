@@ -24,7 +24,6 @@ import { mapState } from "vuex";
 export default {
     name: "",
     components: { ListContainer, Recommend, Rank, Like, Floor, Brand },
-    
 };
 </script>
   
