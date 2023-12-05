@@ -4,45 +4,55 @@
             <!-- 事件委派|事件委托 -->
             <div @mouseleave="leaveIndex">
                 <h2 class="all">全部商品分类</h2>
-            <div class="sort">
-                <div class="all-sort-list2">
-                    <div
-                        class="item"
-                        v-for="(c1, categoryId) in categoryList"
-                        :key="categoryId"
-                    >
-                        <h3
-                            @mouseenter="changeIndex(categoryId)"
-                            :class="{ cur: currentIndex == categoryId }"
+                <div class="sort">
+                    <div class="all-sort-list2">
+                        <div
+                            class="item"
+                            v-for="(c1, categoryId) in categoryList"
+                            :key="categoryId"
                         >
-                            <a href="">{{ c1.categoryName }}</a>
-                        </h3>
-                        <div class="item-list clearfix">
-                            <div
-                                class="subitem"
-                                v-for="(c2, categoryId) in c1.categoryChild"
-                                :key="categoryId"
+                            <h3
+                                @mouseenter="changeIndex(categoryId)"
+                                :class="{ cur: currentIndex == categoryId }"
                             >
-                                <dl class="fore">
-                                    <dt>
-                                        <a href="">{{ c2.categoryName }}</a>
-                                    </dt>
-                                    <dd>
-                                        <em
-                                            v-for="(
-                                                c3, categoryId
-                                            ) in c2.categoryChild"
-                                            :key="categoryId"
-                                        >
-                                            <a href="">{{ c3.categoryName }}</a>
-                                        </em>
-                                    </dd>
-                                </dl>
+                                <a href="">{{ c1.categoryName }}</a>
+                            </h3>
+                            <div
+                                class="item-list clearfix"
+                                :style="{
+                                    display:
+                                        currentIndex == categoryId
+                                            ? 'block'
+                                            : 'none',
+                                }"
+                            >
+                                <div
+                                    class="subitem"
+                                    v-for="(c2, categoryId) in c1.categoryChild"
+                                    :key="categoryId"
+                                >
+                                    <dl class="fore">
+                                        <dt>
+                                            <a href="">{{ c2.categoryName }}</a>
+                                        </dt>
+                                        <dd>
+                                            <em
+                                                v-for="(
+                                                    c3, categoryId
+                                                ) in c2.categoryChild"
+                                                :key="categoryId"
+                                            >
+                                                <a href="">{{
+                                                    c3.categoryName
+                                                }}</a>
+                                            </em>
+                                        </dd>
+                                    </dl>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
             <nav class="nav">
                 <a href="###">服装城</a>
@@ -76,9 +86,9 @@ export default {
         changeIndex(index) {
             this.currentIndex = index;
         },
-        leaveIndex(){
-            this.currentIndex = -1
-        }
+        leaveIndex() {
+            this.currentIndex = -1;
+        },
     },
     computed: {
         ...mapState({
@@ -200,15 +210,9 @@ export default {
                             }
                         }
                     }
-
-                    &:hover {
-                        .item-list {
-                            display: block;
-                        }
-                    }
                 }
 
-                .cur{
+                .cur {
                     background-color: skyblue;
                 }
             }
