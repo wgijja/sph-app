@@ -1,17 +1,9 @@
 <template>
     <div class="type-nav">
         <div class="container">
-            <h2 class="all">全部商品分类</h2>
-            <nav class="nav">
-                <a href="###">服装城</a>
-                <a href="###">美妆馆</a>
-                <a href="###">尚品汇超市</a>
-                <a href="###">全球购</a>
-                <a href="###">闪购</a>
-                <a href="###">团购</a>
-                <a href="###">有趣</a>
-                <a href="###">秒杀</a>
-            </nav>
+            <!-- 事件委派|事件委托 -->
+            <div @mouseleave="leaveIndex">
+                <h2 class="all">全部商品分类</h2>
             <div class="sort">
                 <div class="all-sort-list2">
                     <div
@@ -19,7 +11,10 @@
                         v-for="(c1, categoryId) in categoryList"
                         :key="categoryId"
                     >
-                        <h3>
+                        <h3
+                            @mouseenter="changeIndex(categoryId)"
+                            :class="{ cur: currentIndex == categoryId }"
+                        >
                             <a href="">{{ c1.categoryName }}</a>
                         </h3>
                         <div class="item-list clearfix">
@@ -48,6 +43,17 @@
                     </div>
                 </div>
             </div>
+            </div>
+            <nav class="nav">
+                <a href="###">服装城</a>
+                <a href="###">美妆馆</a>
+                <a href="###">尚品汇超市</a>
+                <a href="###">全球购</a>
+                <a href="###">闪购</a>
+                <a href="###">团购</a>
+                <a href="###">有趣</a>
+                <a href="###">秒杀</a>
+            </nav>
         </div>
     </div>
 </template>
@@ -57,9 +63,22 @@ import { mapState } from "vuex";
 
 export default {
     name: "TypeNav",
+    data() {
+        return {
+            currentIndex: -1,
+        };
+    },
     mounted() {
         //派发dispatch
         this.$store.dispatch("categoryList");
+    },
+    methods: {
+        changeIndex(index) {
+            this.currentIndex = index;
+        },
+        leaveIndex(){
+            this.currentIndex = -1
+        }
     },
     computed: {
         ...mapState({
@@ -187,6 +206,10 @@ export default {
                             display: block;
                         }
                     }
+                }
+
+                .cur{
+                    background-color: skyblue;
                 }
             }
         }
