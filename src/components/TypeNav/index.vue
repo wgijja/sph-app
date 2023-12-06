@@ -70,6 +70,8 @@
 
 <script>
 import { mapState } from "vuex";
+// 引入lodash进行节流
+import throttle from "lodash/throttle";
 
 export default {
     name: "TypeNav",
@@ -83,9 +85,9 @@ export default {
         this.$store.dispatch("categoryList");
     },
     methods: {
-        changeIndex(index) {
+        changeIndex: throttle(function (index) {
             this.currentIndex = index;
-        },
+        }, 50),
         leaveIndex() {
             this.currentIndex = -1;
         },
