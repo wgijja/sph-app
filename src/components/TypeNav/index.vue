@@ -5,7 +5,7 @@
             <div @mouseleave="leaveIndex">
                 <h2 class="all">全部商品分类</h2>
                 <div class="sort">
-                    <div class="all-sort-list2">
+                    <div class="all-sort-list2" @click="goSearch">
                         <div
                             class="item"
                             v-for="(c1, categoryId) in categoryList"
@@ -15,7 +15,11 @@
                                 @mouseenter="changeIndex(categoryId)"
                                 :class="{ cur: currentIndex == categoryId }"
                             >
-                                <a href="">{{ c1.categoryName }}</a>
+                                <a
+                                    :data-categoryName="c1.categoryName"
+                                    :data-category1Id="c1.categoryId"
+                                    >{{ c1.categoryName }}</a
+                                >
                             </h3>
                             <div
                                 class="item-list clearfix"
@@ -33,7 +37,15 @@
                                 >
                                     <dl class="fore">
                                         <dt>
-                                            <a href="">{{ c2.categoryName }}</a>
+                                            <a
+                                                :data-categoryName="
+                                                    c2.categoryName
+                                                "
+                                                :data-category2Id="
+                                                    c2.categoryId
+                                                "
+                                                >{{ c2.categoryName }}</a
+                                            >
                                         </dt>
                                         <dd>
                                             <em
@@ -42,9 +54,15 @@
                                                 ) in c2.categoryChild"
                                                 :key="categoryId"
                                             >
-                                                <a href="">{{
-                                                    c3.categoryName
-                                                }}</a>
+                                                <a
+                                                    :data-categoryName="
+                                                        c3.categoryName
+                                                    "
+                                                    :data-category3Id="
+                                                        c3.categoryId
+                                                    "
+                                                    >{{ c3.categoryName }}</a
+                                                >
                                             </em>
                                         </dd>
                                     </dl>
@@ -72,6 +90,7 @@
 import { mapState } from "vuex";
 // 引入lodash进行节流
 import throttle from "lodash/throttle";
+import router from "@/router";
 
 export default {
     name: "TypeNav",
@@ -90,6 +109,25 @@ export default {
         }, 50),
         leaveIndex() {
             this.currentIndex = -1;
+        },
+        goSearch(event) {
+            let element = event.target;
+            // 节点有一个dataset属性，可以获取节点的自定义属性与属性值
+            let { categoryname, category1id, category2id, category3id } =
+                element.dataset;
+            if (categoryname) {
+                let location = { name: "search" };
+                let query = { categoryName: categoryname };
+                if (category1id) {
+                    query.category1Id = category1id;
+                } else if (category2id) {
+                    query.category2Id = category2id;
+                } else {
+                    query.category3Id = category3id;
+                }
+                location.query = query;
+                this.$router.push(location);
+            }
         },
     },
     computed: {
