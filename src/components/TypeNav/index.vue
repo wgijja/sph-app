@@ -2,75 +2,81 @@
     <div class="type-nav">
         <div class="container">
             <!-- 事件委派|事件委托 -->
-            <div @mouseleave="leaveIndex">
+            <div @mouseleave="leaveIndex" @mouseenter="enterShow">
                 <h2 class="all">全部商品分类</h2>
-                <div class="sort">
-                    <div class="all-sort-list2" @click="goSearch">
-                        <div
-                            class="item"
-                            v-for="(c1, categoryId) in categoryList"
-                            :key="categoryId"
-                        >
-                            <h3
-                                @mouseenter="changeIndex(categoryId)"
-                                :class="{ cur: currentIndex == categoryId }"
-                            >
-                                <a
-                                    :data-categoryName="c1.categoryName"
-                                    :data-category1Id="c1.categoryId"
-                                    >{{ c1.categoryName }}</a
-                                >
-                            </h3>
+                <transition name="sort">
+                    <div class="sort" v-show="show">
+                        <div class="all-sort-list2" @click="goSearch">
                             <div
-                                class="item-list clearfix"
-                                :style="{
-                                    display:
-                                        currentIndex == categoryId
-                                            ? 'block'
-                                            : 'none',
-                                }"
+                                class="item"
+                                v-for="(c1, categoryId) in categoryList"
+                                :key="categoryId"
                             >
-                                <div
-                                    class="subitem"
-                                    v-for="(c2, categoryId) in c1.categoryChild"
-                                    :key="categoryId"
+                                <h3
+                                    @mouseenter="changeIndex(categoryId)"
+                                    :class="{ cur: currentIndex == categoryId }"
                                 >
-                                    <dl class="fore">
-                                        <dt>
-                                            <a
-                                                :data-categoryName="
-                                                    c2.categoryName
-                                                "
-                                                :data-category2Id="
-                                                    c2.categoryId
-                                                "
-                                                >{{ c2.categoryName }}</a
-                                            >
-                                        </dt>
-                                        <dd>
-                                            <em
-                                                v-for="(
-                                                    c3, categoryId
-                                                ) in c2.categoryChild"
-                                                :key="categoryId"
-                                            >
+                                    <a
+                                        :data-categoryName="c1.categoryName"
+                                        :data-category1Id="c1.categoryId"
+                                        >{{ c1.categoryName }}</a
+                                    >
+                                </h3>
+                                <div
+                                    class="item-list clearfix"
+                                    :style="{
+                                        display:
+                                            currentIndex == categoryId
+                                                ? 'block'
+                                                : 'none',
+                                    }"
+                                >
+                                    <div
+                                        class="subitem"
+                                        v-for="(
+                                            c2, categoryId
+                                        ) in c1.categoryChild"
+                                        :key="categoryId"
+                                    >
+                                        <dl class="fore">
+                                            <dt>
                                                 <a
                                                     :data-categoryName="
-                                                        c3.categoryName
+                                                        c2.categoryName
                                                     "
-                                                    :data-category3Id="
-                                                        c3.categoryId
+                                                    :data-category2Id="
+                                                        c2.categoryId
                                                     "
-                                                    >{{ c3.categoryName }}</a
+                                                    >{{ c2.categoryName }}</a
                                                 >
-                                            </em>
-                                        </dd>
-                                    </dl>
+                                            </dt>
+                                            <dd>
+                                                <em
+                                                    v-for="(
+                                                        c3, categoryId
+                                                    ) in c2.categoryChild"
+                                                    :key="categoryId"
+                                                >
+                                                    <a
+                                                        :data-categoryName="
+                                                            c3.categoryName
+                                                        "
+                                                        :data-category3Id="
+                                                            c3.categoryId
+                                                        "
+                                                        >{{
+                                                            c3.categoryName
+                                                        }}</a
+                                                    >
+                                                </em>
+                                            </dd>
+                                        </dl>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </transition>
             </div>
             <nav class="nav">
                 <a href="###">服装城</a>
@@ -97,11 +103,16 @@ export default {
     data() {
         return {
             currentIndex: -1,
+            show: true,
         };
     },
     mounted() {
         //派发dispatch
         this.$store.dispatch("categoryList");
+
+        if (this.$route.path != "/home") {
+            this.show = false;
+        }
     },
     methods: {
         changeIndex: throttle(function (index) {
@@ -109,6 +120,9 @@ export default {
         }, 50),
         leaveIndex() {
             this.currentIndex = -1;
+            if (this.$route.path != "/home") {
+                this.show = false;
+            }
         },
         goSearch(event) {
             let element = event.target;
@@ -128,6 +142,9 @@ export default {
                 location.query = query;
                 this.$router.push(location);
             }
+        },
+        enterShow() {
+            this.show = true;
         },
     },
     computed: {
@@ -256,6 +273,16 @@ export default {
                     background-color: skyblue;
                 }
             }
+        }
+
+        .sort-enter {
+            height: 0px;
+        }
+        .sort-enter-to {
+            height: 461px;
+        }
+        .sort-enter-active {
+            transition: all 0.5s linear;
         }
     }
 }
