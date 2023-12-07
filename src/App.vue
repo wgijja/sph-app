@@ -16,6 +16,10 @@ import Footer from "./components/Footer";
 export default {
     name: "App",
     components: { Header, Footer },
+    mounted() {
+        //派发dispatch
+        this.$store.dispatch("categoryList");
+    },
 };
 </script>
 
