@@ -107,7 +107,6 @@ export default {
         };
     },
     mounted() {
-
         if (this.$route.path != "/home") {
             this.show = false;
         }
@@ -138,6 +137,10 @@ export default {
                     query.category3Id = category3id;
                 }
                 location.query = query;
+                // 如果路由跟团的时候带有params参数，捎带传递过去
+                if (this.$route.params) {
+                    location.params = this.$route.params;
+                }
                 this.$router.push(location);
             }
         },

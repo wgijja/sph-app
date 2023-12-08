@@ -72,16 +72,17 @@ export default {
             //     `/search/ ${this.keyword}?k=${this.keyword.toUpperCase()}`
             // );
             // 第三种方式：对象形式（主要用的）
-            this.$router.push(
-                {
-                    name: "search",
-                    params: {
-                        keyword: this.keyword,
-                    },
-                    query: {
-                        k: this.keyword,
-                    },
+            let location = {
+                name: "search",
+                params: {
+                    keyword: this.keyword,
                 },
+            };
+            if (this.$route.query) {
+                location.query = this.$route.query;
+            }
+            this.$router.push(
+                location,
                 () => {},
                 (error) => {}
             );
