@@ -13,6 +13,9 @@ import router from '@/router'
 // 引入vuex
 import store from '@/store'
 
+// 引入MockServe.js————mock数据
+import '@/mock/mockServe'
+
 
 Vue.config.productionTip = false
 
