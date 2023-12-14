@@ -8,3 +8,6 @@ export const reqCategoryList = () => requests({ url: '/product/getBaseCategoryLi
 
 // 获取banner(Home首页轮播图接口)
 export const reqGetBannerList = () => mockRequests.get('/banner')
+
+// 获取Floor数据
+export const reqGetFloorList = () => mockRequests.get('/floor')

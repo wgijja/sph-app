@@ -1,6 +1,6 @@
 // home小仓库
 
-import { reqCategoryList, reqGetBannerList } from "@/api"
+import { reqCategoryList, reqGetBannerList, reqGetFloorList } from "@/api"
 
 const actions = {
     // 响应函数中的动作
@@ -17,6 +17,14 @@ const actions = {
         if (result.code == 200) {
             context.commit('GETBANNERLIST', result.data)
         }
+    },
+
+    // 获取Floor数据
+    async getFloorList(context) {
+        let result = await reqGetFloorList();
+        if (result.code == 200) {
+            context.commit('GETFLOORLIST', result.data)
+        }
     }
 }
 
@@ -27,12 +35,16 @@ const mutations = {
     },
     GETBANNERLIST(state, value) {
         state.bannerList = value
+    },
+    GETFLOORLIST(state, value) {
+        state.floorList = value
     }
 }
 
 const state = {
     categoryList: [],
-    bannerList: []
+    bannerList: [],
+    floorList: []
 }
 
 const getters = {

@@ -3,9 +3,11 @@ import App from './App.vue'
 
 //全局组件——三级联动组件
 import TypeNav from '@/components/TypeNav'
+import Carousel from '@/components/Carousel'
 
 //注册全局组件
 Vue.component(TypeNav.name, TypeNav)
+Vue.component(Carousel.name, Carousel)
 
 
 //引入路由
