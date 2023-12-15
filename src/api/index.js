@@ -11,3 +11,10 @@ export const reqGetBannerList = () => mockRequests.get('/banner')
 
 // 获取Floor数据
 export const reqGetFloorList = () => mockRequests.get('/floor')
+
+// 获取搜索模块数据，注意：params至少应该是个空对象
+export const reqGetSearchInfo = (params) => requests({
+    url: "/list",
+    method: "post",
+    data: params
+})
