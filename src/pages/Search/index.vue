@@ -11,15 +11,38 @@
                         </li>
                     </ul>
                     <ul class="fl sui-tag">
-                        <li class="with-x">手机</li>
-                        <li class="with-x">iphone<i>×</i></li>
-                        <li class="with-x">华为<i>×</i></li>
-                        <li class="with-x">OPPO<i>×</i></li>
+                        <!-- 分类的面包屑 -->
+                        <li class="with-x" v-if="searchParams.categoryName">
+                            {{ searchParams.categoryName
+                            }}<i @click="removeCategoryName()">×</i>
+                        </li>
+                        <!-- 关键字的面包屑 -->
+                        <li class="with-x" v-if="searchParams.keyword">
+                            {{ searchParams.keyword
+                            }}<i @click="removeKeyword()">×</i>
+                        </li>
+                        <!-- 品牌的面包屑 -->
+                        <li class="with-x" v-if="searchParams.trademark">
+                            {{ searchParams.trademark.split(":")[1]
+                            }}<i @click="removeTrademark()">×</i>
+                        </li>
+                        <!-- 售卖属性的面包屑 -->
+                        <li
+                            class="with-x"
+                            v-for="(attrValue, index) in searchParams.props"
+                            :key="index"
+                        >
+                            {{ attrValue.split(":")[1]
+                            }}<i @click="removeProps(index)">×</i>
+                        </li>
                     </ul>
                 </div>
 
                 <!--selector-->
-                <SearchSelector />
+                <SearchSelector
+                    @trademarkInfo="trademarkInfo"
+                    @attrInfo="attrInfo"
+                />
 
                 <!--details-->
                 <div class="details clearfix">
@@ -170,11 +193,6 @@ export default {
     computed: {
         ...mapGetters(["goodsList", "attrsList", "trademarkList"]),
     },
-    methods: {
-        getData() {
-            this.$store.dispatch("getSearchList", this.searchParams);
-        },
-    },
     watch: {
         $route(oldValue, newValue) {
             Object.assign(
@@ -187,6 +205,54 @@ export default {
             this.searchParams.category1Id = "";
             this.searchParams.category2Id = "";
             this.searchParams.category3Id = "";
+        },
+    },
+    methods: {
+        getData() {
+            this.$store.dispatch("getSearchList", this.searchParams);
+        },
+        removeCategoryName() {
+            //对于没必要的参数可以传undefined优化性能
+            this.searchParams.categoryName = undefined;
+            this.searchParams.category1Id = undefined;
+            this.searchParams.category2Id = undefined;
+            this.searchParams.category3Id = undefined;
+            this.getData();
+            //地址也需要清除掉，可以自己跳自己
+            this.$router.push({
+                name: "search",
+                params: this.$route.searchParams,
+            });
+        },
+        removeKeyword() {
+            this.searchParams.keyword = undefined;
+            this.getData();
+            this.$bus.$emit("clear");
+            this.$router.push({ name: "search", query: this.$route.query });
+        },
+        trademarkInfo(trademarkInfo) {
+            this.searchParams.trademark = `${trademarkInfo.tmId}:${trademarkInfo.tmName}`;
+            this.getData();
+        },
+        removeTrademark() {
+            this.searchParams.trademark = undefined;
+            this.getData();
+            this.$router.push({
+                name: "search",
+                params: this.$route.params,
+                query: this.$route.query,
+            });
+        },
+        attrInfo(attr, attrsValue) {
+            let props = `${attr.attrId}:${attrsValue}:${attr.attrName}`;
+            if (this.searchParams.props.indexOf(props) == -1) {
+                this.searchParams.props.push(props);
+                this.getData();
+            }
+        },
+        removeProps(index) {
+            this.searchParams.props.splice(index, 1);
+            this.getData();
         },
     },
 };
