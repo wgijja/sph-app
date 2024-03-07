@@ -49,23 +49,39 @@
                     <div class="sui-navbar">
                         <div class="navbar-inner filter">
                             <ul class="sui-nav">
-                                <li class="active">
-                                    <a href="#">综合</a>
+                                <li
+                                    :class="{ active: isContainOne }"
+                                    @click="changeOrder('1')"
+                                >
+                                    <a href="#"
+                                        >综合<span
+                                            v-show="isContainOne"
+                                            class="iconfont"
+                                            :class="{
+                                                'icon-xiangshangjiantoucuxiao':
+                                                    isAsc,
+                                                'icon-xiangxiajiantoucuxiao':
+                                                    isDesc,
+                                            }"
+                                        ></span
+                                    ></a>
                                 </li>
-                                <li>
-                                    <a href="#">销量</a>
-                                </li>
-                                <li>
-                                    <a href="#">新品</a>
-                                </li>
-                                <li>
-                                    <a href="#">评价</a>
-                                </li>
-                                <li>
-                                    <a href="#">价格⬆</a>
-                                </li>
-                                <li>
-                                    <a href="#">价格⬇</a>
+                                <li
+                                    :class="{ active: isContainTwo }"
+                                    @click="changeOrder('2')"
+                                >
+                                    <a href="#"
+                                        >价格<span
+                                            v-show="isContainTwo"
+                                            class="iconfont"
+                                            :class="{
+                                                'icon-xiangshangjiantoucuxiao':
+                                                    isAsc,
+                                                'icon-xiangxiajiantoucuxiao':
+                                                    isDesc,
+                                            }"
+                                        ></span
+                                    ></a>
                                 </li>
                             </ul>
                         </div>
@@ -174,7 +190,7 @@ export default {
                 categoryName: "",
                 // 关键字
                 keyword: "",
-                order: "",
+                order: "1:desc",
                 pageNo: 1,
                 pageSize: 10,
                 // 平台售卖属性参数
@@ -192,6 +208,18 @@ export default {
     },
     computed: {
         ...mapGetters(["goodsList", "attrsList", "trademarkList"]),
+        isContainOne() {
+            return this.searchParams.order.indexOf("1") != -1;
+        },
+        isContainTwo() {
+            return this.searchParams.order.indexOf("2") != -1;
+        },
+        isAsc() {
+            return this.searchParams.order.indexOf("asc") != -1;
+        },
+        isDesc() {
+            return this.searchParams.order.indexOf("desc") != -1;
+        },
     },
     watch: {
         $route(oldValue, newValue) {
@@ -252,6 +280,21 @@ export default {
         },
         removeProps(index) {
             this.searchParams.props.splice(index, 1);
+            this.getData();
+        },
+        changeOrder(flag) {
+            let newOrder = "";
+            let originFlag = this.searchParams.order.split(':')[0];
+            let originSort = this.searchParams.order.split(':')[1];
+
+            if (flag == originFlag) {
+                newOrder = `${originFlag}:${
+                    originSort == "desc" ? "asc" : "desc"
+                }`;
+            } else {
+                newOrder = `${flag}:desc`;
+            }
+            this.searchParams.order = newOrder;
             this.getData();
         },
     },
