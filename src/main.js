@@ -1,13 +1,17 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-//全局组件——三级联动组件
+// 全局组件——三级联动组件
 import TypeNav from '@/components/TypeNav'
+// 全局组件——轮播图
 import Carousel from '@/components/Carousel'
+// 全局组件——分页器
+import Pagination from '@/components/Pagination'
 
 //注册全局组件
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carousel.name, Carousel)
+Vue.component(Pagination.name,Pagination)
 
 
 //引入路由
