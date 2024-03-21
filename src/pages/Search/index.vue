@@ -137,7 +137,13 @@
                         </ul>
                     </div>
 
-                    <Pagination :pageNo="27" :pageSize="3" :total="91" :continues="5" />
+                    <Pagination
+                        :pageNo="searchParams.pageNo"
+                        :pageSize="searchParams.pageSize"
+                        :total="total"
+                        :continues="5"
+                        @getPageNum="getPageNum"
+                    />
                 </div>
             </div>
         </div>
@@ -164,7 +170,7 @@ export default {
                 keyword: "",
                 order: "1:desc",
                 pageNo: 1,
-                pageSize: 10,
+                pageSize: 5,
                 // 平台售卖属性参数
                 props: [],
                 // 品牌
@@ -192,6 +198,9 @@ export default {
         isDesc() {
             return this.searchParams.order.indexOf("desc") != -1;
         },
+        ...mapState({
+            total: state => state.search.searchList.total,
+        }),
     },
     watch: {
         $route(oldValue, newValue) {
@@ -256,8 +265,8 @@ export default {
         },
         changeOrder(flag) {
             let newOrder = "";
-            let originFlag = this.searchParams.order.split(':')[0];
-            let originSort = this.searchParams.order.split(':')[1];
+            let originFlag = this.searchParams.order.split(":")[0];
+            let originSort = this.searchParams.order.split(":")[1];
 
             if (flag == originFlag) {
                 newOrder = `${originFlag}:${
@@ -267,6 +276,12 @@ export default {
                 newOrder = `${flag}:desc`;
             }
             this.searchParams.order = newOrder;
+            this.getData();
+        },
+        // 自定义事件的回调
+        getPageNum(val) {
+            console.log("父组件获取到的数据为：" + val);
+            this.searchParams.pageNo = val;
             this.getData();
         },
     },

@@ -1,18 +1,44 @@
 <template>
     <div class="pagination">
-        <button>上一页</button>
-        <button v-show="pageNo != 1">1</button>
-        <button v-show="pageNo > 4">···</button>
-        <button v-show="pageNo > 3">{{ pageNo - 2 }}</button>
-        <button v-show="pageNo > 2">{{ pageNo - 1 }}</button>
-        <button class="curPage" style="background-color: orange">
-            {{ pageNo }}
+        <button
+            :disabled="pageNo == 1"
+            @click="$emit('getPageNum', pageNo - 1)"
+        >
+            上一页
         </button>
-        <button v-show="totalPage - pageNo > 1">{{ pageNo + 1 }}</button>
-        <button v-show="totalPage - pageNo > 2">{{ pageNo + 2 }}</button>
-        <button v-show="totalPage - pageNo > 3">···</button>
-        <button v-show="totalPage - pageNo >= 1">{{ totalPage }}</button>
-        <button>下一页</button>
+        <button
+            v-show="startNumAndEndNum.startNum > 1"
+            @click="$emit('getPageNum', 1)"
+            :class="{ active: pageNo == 1 }"
+        >
+            1
+        </button>
+        <button v-show="startNumAndEndNum.startNum > 2">···</button>
+
+        <button
+            v-for="(page, index) in startNumAndEndNum.endNum"
+            :key="index"
+            v-show="page >= startNumAndEndNum.startNum"
+            @click="$emit('getPageNum', page)"
+            :class="{ active: pageNo == page }"
+        >
+            {{ page }}
+        </button>
+
+        <button v-show="startNumAndEndNum.endNum < totalPage - 1">···</button>
+        <button
+            v-show="startNumAndEndNum.endNum < totalPage"
+            @click="$emit('getPageNum', totalPage)"
+            :class="{ active: pageNo == totalPage }"
+        >
+            {{ totalPage }}
+        </button>
+        <button
+            :disabled="pageNo == totalPage"
+            @click="$emit('getPageNum', pageNo + 1)"
+        >
+            下一页
+        </button>
 
         <button style="margin-left: 30px">共 {{ total }} 条</button>
     </div>
@@ -30,8 +56,8 @@ export default {
             let startNum = 0,
                 endNum = 0;
             let eachSize = Math.floor(this.continues / 2);
-            if (totalPage <= this.continues) {
-                (startNum = 1), (endNum = totalPage);
+            if (this.totalPage <= this.continues) {
+                (startNum = 1), (endNum = this.totalPage);
             } else {
                 startNum = this.pageNo - eachSize;
                 endNum = this.pageNo + eachSize;
@@ -40,12 +66,12 @@ export default {
                     endNum = this.continues;
                 }
 
-                if (end > totalPage) {
-                    endNum = totalPage;
-                    startNum = totalPage - this.continues + 1;
+                if (endNum > this.totalPage) {
+                    endNum = this.totalPage;
+                    startNum = this.totalPage - this.continues + 1;
                 }
             }
-            return {startNum, endNum};
+            return { startNum, endNum };
         },
     },
 };
@@ -80,9 +106,10 @@ export default {
 
         &.active {
             cursor: not-allowed;
-            background-color: #409eff;
+            background-color: red;
             color: #fff;
         }
     }
 }
+
 </style>
